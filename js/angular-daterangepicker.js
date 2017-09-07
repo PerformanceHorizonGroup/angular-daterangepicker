@@ -40,8 +40,11 @@
         opts = _mergeOpts({}, dateRangePickerConfig, customOpts);
         _picker = null;
         _clear = function() {
-          _picker.setStartDate();
-          return _picker.setEndDate();
+          var d;
+          d = new Date();
+          d.setDate(d.getDate() + 1);
+          _picker.setStartDate(d);
+          return _picker.setEndDate(d);
         };
         _setDatePoint = function(setter) {
           return function(newValue) {
@@ -119,8 +122,8 @@
               objValue = f(val);
             } else {
               x = val.split(opts.locale.separator).map(f);
-              objValue.startDate = x[0].startOf("day");
-              objValue.endDate = x[1].endOf("day");
+              objValue.startDate = x[0];
+              objValue.endDate = x[1];
             }
           }
           return objValue;

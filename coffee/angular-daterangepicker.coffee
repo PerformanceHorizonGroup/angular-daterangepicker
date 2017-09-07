@@ -28,12 +28,14 @@ picker.directive 'dateRangePicker', ($compile, $timeout, $parse, dateRangePicker
 
     el = $(element)
     customOpts = $scope.opts
-    opts = _mergeOpts({}, angular.copy(dateRangePickerConfig), customOpts)
+    opts = _mergeOpts({}, dateRangePickerConfig, customOpts)
     _picker = null
 
     _clear = ->
-      _picker.setStartDate()
-      _picker.setEndDate()
+      d = new Date()
+      d.setDate(d.getDate() + 1)
+      _picker.setStartDate(d)
+      _picker.setEndDate(d)
 
     _setDatePoint = (setter) ->
       (newValue) ->
@@ -72,7 +74,7 @@ picker.directive 'dateRangePicker', ($compile, $timeout, $parse, dateRangePicker
 
       if opts.singleDatePicker and objValue
         f(objValue)
-      else if objValue and objValue.startDate
+      else if objValue.startDate
         [f(objValue.startDate), f(objValue.endDate)].join(opts.locale.separator)
       else ''
 
@@ -100,9 +102,8 @@ picker.directive 'dateRangePicker', ($compile, $timeout, $parse, dateRangePicker
           objValue = f(val)
         else
           x = val.split(opts.locale.separator).map(f)
-          # Use startOf/endOf day to comply with how bootstrap-daterangepicker works
-          objValue.startDate = x[0].startOf("day")
-          objValue.endDate = x[1].endOf("day")
+          objValue.startDate = x[0]
+          objValue.endDate = x[1]
       objValue
 
     modelCtrl.$isEmpty = (val) ->
